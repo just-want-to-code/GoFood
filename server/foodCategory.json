@@ -1,11 +1,11 @@
 [
-    {
-        "CategoryName": "Biryani/Rice"
-    },
-    {
-        "CategoryName": "Starter"
-    },
-    {
-        "CategoryName": "Pizza"
-    }
+  {
+    "CategoryName": "cat1"
+  },
+  {
+    "CategoryName": "cat2"
+  },
+  {
+    "CategoryName": "cat3"
+  }
 ]

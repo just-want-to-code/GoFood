@@ -9,6 +9,7 @@ export default function Card(props) {
   const priceOptions = Object.keys(options);
   const [qty, setQty] = useState(1);
   const [size, setSize] = useState('');
+  const [price, setPrice] = useState('');
   const handleAddToCart = async () => {
     //console.log(size);
     let food = {};
@@ -52,6 +53,29 @@ export default function Card(props) {
   useEffect(() => {
     setSize(priceRef.current.value);
   }, []);
+  const setNewPrice = async (e) => {
+    e.preventDefault();
+    const data = { item: props.foodItem.name, opt: size, newprice: price };
+    const response = await fetch('http://localhost:5000/price/change', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const json = await response.json();
+    //console.log(json);
+
+    if (!json.success) {
+      alert('Error occured!');
+    }
+    if (json.success) {
+      alert('Price Changed');
+      options[size] = price;
+      setPrice('');
+      //location.reload();
+    }
+  };
   return (
     <div>
       <div
@@ -62,23 +86,29 @@ export default function Card(props) {
           className="card-img-top"
           src={props.foodItem.img}
           alt="Card image cap"
-          style={{ height: '120px', objectFit: 'fill' }}
+          style={{ height: '180px', width: '120 px', objectFit: 'contain' }}
         />
+
         <div className="card-body">
           <h5 className="card-title">{props.foodItem.name}</h5>
           <div className="container w-100">
-            <select
-              className="m-2 h-100 bg-success rounded"
-              onChange={(e) => setQty(e.target.value)}
-            >
-              {Array.from(Array(6), (e, i) => {
-                return (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </option>
-                );
-              })}
-            </select>
+            {localStorage.getItem('role') === 'Sales' ? (
+              <select
+                className="m-2 h-100 bg-success rounded"
+                onChange={(e) => setQty(e.target.value)}
+              >
+                {Array.from(Array(6), (e, i) => {
+                  return (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : (
+              ''
+            )}
+
             <select
               className="m-2 h-100 bg-success rounded"
               ref={priceRef}
@@ -93,14 +123,33 @@ export default function Card(props) {
               })}
             </select>
 
-            <div className="d-inline h-100 fs-5">Rs {finalPrice}/-</div>
-            <hr></hr>
-            <button
-              className="btn btn-success justify-center ms-2"
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </button>
+            <div className="d-inline h-100 fs-5">Rs {finalPrice}</div>
+
+            {localStorage.getItem('role') === 'Manager' ? (
+              <form>
+                <label htmlFor="newprice">Enter new price: </label>
+                <input
+                  id="newprice"
+                  type="text"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+                <button onClick={setNewPrice}>Change Price</button>
+              </form>
+            ) : (
+              ''
+            )}
+
+            {localStorage.getItem('role') === 'Sales' ? (
+              <button
+                className="btn btn-success justify-center ms-2"
+                onClick={handleAddToCart}
+              >
+                Add to Cart
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>
