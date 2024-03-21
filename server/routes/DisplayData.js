@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
-router.post('/foodData', (req, res) => {
+const { foodModel, categoryModel } = require('../models/Food.js');
+router.post('/foodData', async (req, res) => {
   try {
-    //console.log(global.food_items);
+    const response = await foodModel.find({});
+    const response2 = await categoryModel.find({});
+    global.food_items = response;
+    global.foodCategory = response2;
     res.send([global.food_items, global.foodCategory]);
   } catch (err) {
     console.error(err.message);

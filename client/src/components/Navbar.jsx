@@ -15,9 +15,10 @@ export default function BasicNavbar() {
   const data = useCart();
   const handleLogout = (e) => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('role');
     navigate('/login');
   };
-
   return (
     <Navbar expand="lg" className="bg-success">
       <Container className="">
@@ -32,7 +33,8 @@ export default function BasicNavbar() {
                 Home
               </Link>
             </li>
-            {localStorage.getItem('authToken') ? (
+            {localStorage.getItem('authToken') &&
+            localStorage.getItem('role') === 'Sales' ? (
               <li className="nav-item active">
                 <Link className="nav-link active fs-5" to="/myOrder">
                   My Orders
@@ -48,26 +50,24 @@ export default function BasicNavbar() {
                 <Link className="btn bg-white text-success mx-1" to="/login">
                   Login
                 </Link>
-                <Link
-                  className="btn bg-white text-success mx-1"
-                  to="/createuser"
-                >
-                  Signup
-                </Link>
               </div>
             ) : (
               <div>
-                <div
-                  className="btn bg-white text-success mx-2"
-                  onClick={() => {
-                    setCartView(true);
-                  }}
-                >
-                  My Cart{' '}
-                  <Badge pill bg="danger">
-                    {data.length}
-                  </Badge>
-                </div>
+                {localStorage.getItem('role') === 'Sales' ? (
+                  <div
+                    className="btn bg-white text-success mx-2"
+                    onClick={() => {
+                      setCartView(true);
+                    }}
+                  >
+                    My Cart{' '}
+                    <Badge pill bg="danger">
+                      {data.length}
+                    </Badge>
+                  </div>
+                ) : (
+                  ''
+                )}
                 {cartView ? (
                   <Modal onClose={() => setCartView(false)}>
                     <Cart></Cart>

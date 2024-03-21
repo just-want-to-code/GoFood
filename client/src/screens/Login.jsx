@@ -29,7 +29,7 @@ export default function Login() {
     if (json.success) {
       localStorage.setItem('authToken', json.authToken);
       localStorage.setItem('userEmail', credentials.email);
-      //console.log(localStorage.getItem('authToken'));
+      localStorage.setItem('role', json.role);
       navigate('/');
     }
   };
@@ -81,9 +81,6 @@ export default function Login() {
           <button type="submit" className="m-3 btn btn-primary">
             Submit
           </button>
-          <Link to="/createuser" className="m-3 btn btn-danger">
-            I'm a new user
-          </Link>
         </form>
       </div>
     </>

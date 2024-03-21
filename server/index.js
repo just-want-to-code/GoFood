@@ -6,6 +6,7 @@ require('dotenv').config();
 const userRouter = require('./routes/CreateUser.js');
 const displayRouter = require('./routes/DisplayData.js');
 const orderRouter = require('./routes/OrderData.js');
+const priceRouter = require('./routes/ChangePrice.js');
 
 const connectMongo = require('./db');
 connectMongo(process.env.MONGO_URL);
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/', userRouter);
 app.use('/api/', displayRouter);
 app.use('/api/', orderRouter);
+app.use('/price/', priceRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
