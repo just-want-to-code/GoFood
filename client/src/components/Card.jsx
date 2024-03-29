@@ -10,6 +10,7 @@ export default function Card(props) {
   const [qty, setQty] = useState(1);
   const [size, setSize] = useState('');
   const [price, setPrice] = useState('');
+  const available = options[size] ? options[size][1] : 0;
   const handleAddToCart = async () => {
     //console.log(size);
     let food = {};
@@ -49,7 +50,7 @@ export default function Card(props) {
       size: size,
     });
   };
-  const finalPrice = qty * parseInt(options[size]);
+  const finalPrice = qty * parseInt(options[size] ? options[size][0] : '0');
   useEffect(() => {
     setSize(priceRef.current.value);
   }, []);
@@ -76,6 +77,7 @@ export default function Card(props) {
       //location.reload();
     }
   };
+  console.log(available, size, options);
   return (
     <div>
       <div
@@ -97,7 +99,7 @@ export default function Card(props) {
                 className="m-2 h-100 bg-success rounded"
                 onChange={(e) => setQty(e.target.value)}
               >
-                {Array.from(Array(6), (e, i) => {
+                {Array.from({ length: available }, (e, i) => {
                   return (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -108,7 +110,6 @@ export default function Card(props) {
             ) : (
               ''
             )}
-
             <select
               className="m-2 h-100 bg-success rounded"
               ref={priceRef}
@@ -122,7 +123,7 @@ export default function Card(props) {
                 );
               })}
             </select>
-
+            <div>Available: {available}</div>
             <div className="d-inline h-100 fs-5">Rs {finalPrice}</div>
 
             {localStorage.getItem('role') === 'Manager' ? (
